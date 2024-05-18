@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+
+%setup
+	grep ^slurm: /etc/passwd >> ${APPTAINER_ROOTFS}/etc/passwd
+	grep ^slurm: /etc/group >> ${APPTAINER_ROOTFS}/etc/group
+
+%post
+	# This makes sure we are not prompted during installation
+	export DEBIAN_FRONTEND=noninteractive
+
+	apt-get -y update
+
+	# Necessary packages
+	apt-get install -y python3-pip
+	apt-get install -y openjdk-17-jdk
+	apt-get install -y wget
+	apt-get install -y openssh-client
+	apt-get install -y openssh-server
+	apt-get install -y vim
+
+    # Necessary python packages
+    pip3 install --upgrade pip
+	pip3 install pyspark
+	pip3 install splink['all']
+
+	mkdir spark && cd spark
+	wget https://dlcdn.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz
+	tar -xvf spark-3.5.1-bin-hadoop3.tgz
+	rm spark-3.5.1-bin-hadoop3.tgz
+
+%environment
+	export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+	export SPARK_HOME="/spark/spark-3.4.0-bin-hadoop3"

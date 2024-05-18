@@ -1,0 +1,17 @@
+Spark Command: /usr/lib/jvm/java-17-openjdk-amd64/bin/java -cp /mmfs1/home/seunguk/spark/conf/:/spark/spark-3.4.0-bin-ha========================================
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+24/05/16 21:07:51 INFO Master: Started daemon with process name: 90791@n3385
+24/05/16 21:07:51 INFO SignalUtils: Registering signal handler for TERM
+24/05/16 21:07:51 INFO SignalUtils: Registering signal handler for HUP
+24/05/16 21:07:51 INFO SignalUtils: Registering signal handler for INT
+24/05/16 21:07:54 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java cl24/05/16 21:07:54 INFO SecurityManager: Changing view acls to: seunguk
+24/05/16 21:07:54 INFO SecurityManager: Changing modify acls to: seunguk
+24/05/16 21:07:54 INFO SecurityManager: Changing view acls groups to:
+24/05/16 21:07:54 INFO SecurityManager: Changing modify acls groups to:
+24/05/16 21:07:54 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view perm24/05/16 21:07:55 INFO Utils: Successfully started service 'sparkMaster' on port 7077.
+24/05/16 21:07:55 INFO Master: Starting Spark master at spark://n3385:7077
+24/05/16 21:07:55 INFO Master: Running Spark version 3.4.0
+24/05/16 21:07:55 INFO JettyUtils: Start Jetty 0.0.0.0:8080 for MasterUI
+24/05/16 21:07:55 INFO Utils: Successfully started service 'MasterUI' on port 8080.
+24/05/16 21:07:55 INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://n3385.hyak.local:8080
+24/05/16 21:07:55 INFO Master: I have been elected leader! New state: ALIVE
