@@ -7,6 +7,7 @@ The Apache Spark cluster is largely made up of two parts, the **master** nodes a
 In this tutorial, we will quickly learn about how to work with Hyak, the UW compute cluster, and other common linux tools such as Tmux. Then we will learn about Apptainer / Singularity container and create our own Apptainer container with spark installed. And then finally, we will then configure the necessary parameters for Apache Spark and run a simple recordlinkage program using the Splink package.
 
 ![Spark architecture](img/spark_architecture.png)
+
 ## Tools and Setup
 
 I will assume that everyone has access to Hyak. Otherwise, see [this](https://hyak.uw.edu/docs/account-creation). Once you have logged in, you can use `hyakalloc` to see the current resources available to you. If you have access to other research labs, you are welcome to use them but I will use the `STF` account since everyone has access to those.
@@ -54,6 +55,14 @@ One thing you should be careful about is that the spark cluster will be dealloca
 Now we will learn about to connect multiple worker nodes to the master and make a more realistic spark cluster. First off, we should deallocate everything and start fresh since in our current configuration, we only asked for 1 node and we need multiple nodes for the master and the workers. Do `exit` until you are back at the hyak login nodes. Before we start, a good idea is to delete the logs in the `spark/conf/logs` directory since spark natively does not clear the logs and it becomes hard to debug later if there are logs from previous spark sessions.
 
 Now we want to ask for at least 3 nodes (1 master, 1 worker, 1 free node to submit spark jobs) so we will use `salloc -A stf -p compute --time=3:00:00 --mem=100G -N 3` to get 3 nodes for 3 hours with total memory of 100G. Once you get your allocation, you can either do `squeue -u <netid>` or `srun hostname` to get the list of nodes you got. For example `n[2000-2003]` means you have the nodes `n2000, n2001, n2002, n2003`. From here, start a tmux session, ssh into the first node if you are not in one already, start apptainer shell with the binds mentioned above, go into `/spark/conf/spark-env.sh` and change the master host to the current node, and run the `/spark/spark-3.5.1-bin-hadoop3/sbin/start-master.sh` command and check the logs direcory to see if spark master started up correctly. In the master logs file there should be a line that looks something like `24/05/16 21:07:55 INFO Master: Starting Spark master at spark://n3385:7077`. `spark://n3385:7077` is the address of the spark master and remember this when you start the worker. Now do `ctrl + b` and `d` to exit the tmux session and do `tmux` again in the terminal to create a new session. In this session, ssh into a node not running the spark master and this time all you have to do is start apptainer shell and start the worker using `/spark/spark-3.5.1-bin-hadoop3/sbin/start-master.sh <master address>`. In my case it would be `/spark/spark-3.5.1-bin-hadoop3/sbin/start-master.sh spark://n3385:7077`. This will connect the worker to the master and you can check if this was successful by going into the master log file in the logs and seeing the log that says worker connected.
+
+## Using the WebUI
+
+In the spark master logs, there is a line that says something like `24/05/16 21:07:55 INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://n3385.hyak.local:8080`. This means that spark started a webUI where you can see the status and progress of jobs submitted on port 8080. Since this port is local to the hyak node, we have to port forward this to our local machine to see the output. In VS Code, open the integrated terminal by doing `ctrl + j` and going to the ports tab. In the port section, type in the address and port number for your node, which in my case is `n3385.hyak.local:8080` without the `http://`. Do you same thing for worker nodes as you want to be able to view all parts of the webUI.
+
+## Submitting a job
+
+At this point, you should have used tmux for each master / worker node and have one free node remaining. We need this node because to submit a spark job, we need to submit it from outside of the spark cluster. Start a tmux connection, start apptainer shell, and make sure everything inside submit.sh is correct. Notably, make sure the master node is set correctly. After making sure everything is set correctly, run the script to submit the job.
 
 ## Additional Reading
 
